@@ -253,6 +253,7 @@
       border-radius: 8px;
       overflow: hidden;
       aspect-ratio: 4/3;
+      position: relative;
     }
 
     video {
@@ -280,6 +281,10 @@
       color: #333;
       text-align: center;
       line-height: 1.6;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .detection-status {
@@ -316,6 +321,16 @@
       gap: 15px;
     }
 
+    .error-message {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
     /* RESPONSIVE */
     @media (max-width: 900px) {
       h1 {
@@ -345,6 +360,10 @@
       button {
         padding: 12px 35px;
         font-size: 13px;
+      }
+
+      #word {
+        font-size: 36px;
       }
     }
 
@@ -410,9 +429,11 @@
       <h2>ระบบแปลภาษามือ</h2>
     </div>
 
+    <div id="errorContainer"></div>
+
     <div class="camera-container">
       <div class="video-wrapper">
-        <video id="camera" autoplay playsinline></video>
+        <video id="camera" autoplay playsinline muted></video>
       </div>
 
       <div class="result-panel">
@@ -429,7 +450,33 @@
     </div>
   </section>
 
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+
   <script>
+    let cameraStream = null;
+    let isProcessing = false;
+
+    // Sign language gesture dictionary
+    const signDictionary = {
+      // Simple detections based on hand position and movement
+      'hello': 'สวัสดี',
+      'thank_you': 'ขอบคุณ',
+      'love': 'รัก',
+      'help': 'ช่วยเหลือ',
+      'yes': 'ใช่',
+      'no': 'ไม่',
+      'happy': 'ยินดี',
+      'please': 'โปรด'
+    };
+
+    function showError(message) {
+      const errorContainer = document.getElementById('errorContainer');
+      errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+    }
+
     function openTranslator() {
       // Hide home sections
       document.querySelector(".hero").style.display = "none";
@@ -445,41 +492,136 @@
           width: { ideal: 1280 },
           height: { ideal: 720 },
           facingMode: "user"
-        }
+        },
+        audio: false
       })
         .then(stream => {
+          cameraStream = stream;
           const video = document.getElementById("camera");
           video.srcObject = stream;
-          startTranslation();
+          
+          // Wait for video to be ready
+          video.onloadedmetadata = () => {
+            startHandDetection();
+          };
         })
         .catch(error => {
           console.error("Error accessing camera:", error);
-          document.getElementById("word").innerHTML = "ไม่สามารถเข้าถึงกล้องได้";
+          showError('❌ ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบสิทธิ์การเข้าถึง');
+          document.getElementById("word").innerHTML = "เข้าถึงกล้องไม่ได���";
         });
     }
 
-    function backHome() {
-      location.reload();
+    function startHandDetection() {
+      const video = document.getElementById("camera");
+      const hands = new Hands({
+        locateFile: (file) => {
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }
+      });
+
+      hands.setOptions({
+        maxNumHands: 2,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+      });
+
+      hands.onResults(onHandsResults);
+
+      const camera = new Camera(video, {
+        onFrame: async () => {
+          await hands.send({ image: video });
+        },
+        width: 1280,
+        height: 720
+      });
+
+      camera.start();
     }
 
-    function startTranslation() {
-      // Simulated translation results
-      const translations = [
-        "สวัสดี",
-        "ขอบคุณ",
-        "รัก",
-        "ช่วยเหลือ",
-        "ยินดี",
-        "ใช่",
-        "ไม่",
-        "สวัสดีค่ะ"
-      ];
+    function onHandsResults(results) {
+      if (!results.multiHand) return;
 
-      // Update translation every 2.5 seconds
-      setInterval(() => {
-        const randomWord = translations[Math.floor(Math.random() * translations.length)];
-        document.getElementById("word").innerHTML = randomWord;
-      }, 2500);
+      const wordDisplay = document.getElementById("word");
+
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        // Hand detected
+        const landmarks = results.multiHandLandmarks[0];
+        const handedness = results.multiHandedness[0];
+
+        // Simple gesture detection based on finger positions
+        const gesture = detectGesture(landmarks);
+
+        if (gesture) {
+          wordDisplay.innerHTML = gesture;
+        } else {
+          wordDisplay.innerHTML = "คำตรวจจับได้...";
+        }
+      } else {
+        // No hand detected
+        wordDisplay.innerHTML = "รอการตรวจจับ...";
+      }
+    }
+
+    function detectGesture(landmarks) {
+      // Get key landmark positions (normalized 0-1)
+      const thumbTip = landmarks[4];
+      const indexTip = landmarks[8];
+      const middleTip = landmarks[12];
+      const ringTip = landmarks[16];
+      const pinkyTip = landmarks[20];
+      const wrist = landmarks[0];
+      const palm = landmarks[9];
+
+      // Calculate distances
+      const indexHeight = wrist.y - indexTip.y;
+      const middleHeight = wrist.y - middleTip.y;
+      const ringHeight = wrist.y - ringTip.y;
+      const pinkyHeight = wrist.y - pinkyTip.y;
+
+      // Thumbs up - thumb up, fingers folded
+      if (thumbTip.y < palm.y && indexHeight < 0.1 && middleHeight < 0.1) {
+        return "ยินดี 👍";
+      }
+
+      // Open hand - all fingers extended
+      if (indexHeight > 0.15 && middleHeight > 0.15 && ringHeight > 0.15 && pinkyHeight > 0.15) {
+        return "สวัสดี ✋";
+      }
+
+      // Peace sign - index and middle extended, others folded
+      if (indexHeight > 0.15 && middleHeight > 0.15 && ringHeight < 0.05 && pinkyHeight < 0.05) {
+        return "ยินดี ✌️";
+      }
+
+      // Pointing - only index extended
+      if (indexHeight > 0.15 && middleHeight < 0.1 && ringHeight < 0.1) {
+        return "นี่ 👉";
+      }
+
+      // OK sign - thumb and index touching
+      const thumbIndexDistance = Math.sqrt(
+        Math.pow(thumbTip.x - indexTip.x, 2) + Math.pow(thumbTip.y - indexTip.y, 2)
+      );
+      if (thumbIndexDistance < 0.05) {
+        return "ได้ 👌";
+      }
+
+      // Fist - all fingers folded
+      if (indexHeight < 0.05 && middleHeight < 0.05 && ringHeight < 0.05 && pinkyHeight < 0.05) {
+        return "หยุด ✊";
+      }
+
+      return null;
+    }
+
+    function backHome() {
+      // Stop camera stream
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+      }
+      location.reload();
     }
   </script>
 
