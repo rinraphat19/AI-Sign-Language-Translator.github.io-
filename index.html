@@ -2,571 +2,486 @@
 <html lang="th">
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Sign AI</title>
-
-
-<style>
-
-
-*{
-box-sizing:border-box;
-font-family:"Helvetica Neue",Arial,sans-serif;
-}
-
-
-
-body{
-
-margin:0;
-
-background:#f5f2eb;
-
-color:#333;
-
-}
-
-
-
-/* NAV */
-
-nav{
-
-height:80px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding:0 8%;
-
-}
-
-
-
-.logo{
-
-font-size:24px;
-
-letter-spacing:5px;
-
-}
-
-
-
-nav span{
-
-font-size:14px;
-
-color:#777;
-
-}
-
-
-
-/* HERO */
-
-
-.hero{
-
-min-height:90vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-text-align:center;
-
-animation:fade 1.5s;
-
-}
-
-
-
-@keyframes fade{
-
-from{
-
-opacity:0;
-
-transform:translateY(30px);
-
-}
-
-
-to{
-
-opacity:1;
-
-}
-
-}
-
-
-
-.circle{
-
-width:220px;
-
-height:220px;
-
-background:#e8e3d8;
-
-border-radius:50%;
-
-margin:auto;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-font-size:80px;
-
-margin-bottom:40px;
-
-}
-
-
-
-h1{
-
-font-size:60px;
-
-font-weight:300;
-
-letter-spacing:8px;
-
-}
-
-
-
-p{
-
-font-size:20px;
-
-line-height:2;
-
-color:#666;
-
-}
-
-
-
-button{
-
-margin-top:35px;
-
-padding:16px 50px;
-
-border:none;
-
-background:#333;
-
-color:white;
-
-cursor:pointer;
-
-font-size:16px;
-
-}
-
-
-
-button:hover{
-
-opacity:.7;
-
-}
-
-
-
-/* ABOUT */
-
-
-.about{
-
-padding:80px 15%;
-
-text-align:center;
-
-background:white;
-
-}
-
-
-
-.about h2{
-
-font-weight:400;
-
-font-size:35px;
-
-}
-
-
-
-/* TRANSLATE */
-
-
-#translate{
-
-display:none;
-
-padding:60px 8%;
-
-}
-
-
-
-.camera{
-
-display:flex;
-
-gap:40px;
-
-}
-
-
-
-video{
-
-width:65%;
-
-border-radius:10px;
-
-background:black;
-
-}
-
-
-
-.result{
-
-background:white;
-
-width:35%;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-font-size:40px;
-
-border:1px solid #ddd;
-
-}
-
-
-
-.status{
-
-font-size:14px;
-
-color:#999;
-
-text-align:center;
-
-margin-top:20px;
-
-}
-
-
-
-.back{
-
-background:none;
-
-color:#333;
-
-border:1px solid #333;
-
-}
-
-
-
-
-@media(max-width:800px){
-
-.camera{
-
-flex-direction:column;
-
-}
-
-
-video,.result{
-
-width:100%;
-
-}
-
-}
-
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Language AI Translator</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+
+    body {
+      background: #fafaf8;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 5%;
+      border-bottom: 1px solid #e0ddd5;
+      background: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    nav span {
+      font-size: 12px;
+      color: #999;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: #fafaf8;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .hero-content {
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    .hero-icon {
+      width: 200px;
+      height: 200px;
+      background: #efefea;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 90px;
+      margin: 0 auto 40px;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+
+    button {
+      padding: 14px 45px;
+      border: 1px solid #333;
+      background: #333;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #555;
+      border-color: #555;
+    }
+
+    .button-secondary {
+      background: transparent;
+      color: #333;
+    }
+
+    .button-secondary:hover {
+      background: #f0f0f0;
+    }
+
+    /* ABOUT SECTION */
+    .about {
+      padding: 100px 5%;
+      background: white;
+      border-top: 1px solid #e0ddd5;
+    }
+
+    .about-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .about h2 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+    }
+
+    .about-text {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 60px;
+      line-height: 1.8;
+    }
+
+    /* TEAM SECTION */
+    .team {
+      padding: 60px 5%;
+      background: white;
+    }
+
+    .team-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .team h2 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 50px;
+      text-align: center;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 50px;
+      text-align: center;
+    }
+
+    .team-member {
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .member-avatar {
+      width: 150px;
+      height: 150px;
+      background: #efefea;
+      border-radius: 50%;
+      margin: 0 auto 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+    }
+
+    .member-name {
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .member-role {
+      font-size: 13px;
+      color: #999;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* TRANSLATE SECTION */
+    #translate {
+      display: none;
+      padding: 60px 5%;
+      background: #fafaf8;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .translate-header {
+      max-width: 1200px;
+      margin: 0 auto 40px;
+    }
+
+    .translate-header h2 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .camera-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: stretch;
+    }
+
+    .video-wrapper {
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .result-panel {
+      background: white;
+      border: 1px solid #e0ddd5;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      min-height: 300px;
+    }
+
+    #word {
+      font-size: 48px;
+      font-weight: 300;
+      color: #333;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .detection-status {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .controls {
+      max-width: 1200px;
+      margin: 30px auto 0;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .camera-container {
+        grid-template-columns: 1fr;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      nav {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 5%;
+        gap: 10px;
+      }
+
+      .logo {
+        font-size: 16px;
+      }
+
+      button {
+        padding: 12px 35px;
+        font-size: 13px;
+      }
+    }
+
+  </style>
 </head>
-
-
 
 <body>
 
-
-
-<nav>
-
-
-<div class="logo">
-
-SIGN AI
-
-</div>
-
-
-<span>
-
-AI SIGN LANGUAGE TRANSLATOR
-
-</span>
-
-
-</nav>
-
-
-
-
-
-<section class="hero">
-
-
-<div>
-
-
-<div class="circle">
-
-🤟
-
-</div>
-
-
-<h1>
-
-แปลภาษามือ
-
-</h1>
-
-
-<p>
-
-AI ช่วยเปลี่ยนท่าทางภาษามือ<br>
-
-เป็นข้อความแบบเรียลไทม์
-
-</p>
-
-
-
-<button onclick="openAI()">
-
-เริ่มใช้งาน
-
-</button>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<section class="about">
-
-
-<h2>
-
-เกี่ยวกับโปรแกรม
-
-</h2>
-
-
-<p>
-
-ระบบนี้ถูกพัฒนาเพื่อช่วยลดข้อจำกัดในการสื่อสาร<br>
-
-ระหว่างผู้ใช้ภาษามือและบุคคลทั่วไป
-
-</p>
-
-
-</section>
-
-
-
-
-
-
-
-<section id="translate">
-
-
-<h2>
-
-Translator
-
-</h2>
-
-
-<br>
-
-
-<div class="camera">
-
-
-<video id="camera" autoplay></video>
-
-
-<div class="result">
-
-
-<span id="word">
-
-รอการตรวจจับ...
-
-</span>
-
-
-</div>
-
-
-</div>
-
-
-
-<div class="status">
-
-● AI กำลังประมวลผลแบบ Real-time
-
-</div>
-
-
-
-<button class="back" onclick="backHome()">
-
-กลับ
-
-</button>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-<script>
-
-
-function openAI(){
-
-
-document.querySelector(".hero").style.display="none";
-
-
-document.querySelector(".about").style.display="none";
-
-
-document.getElementById("translate").style.display="block";
-
-
-
-navigator.mediaDevices.getUserMedia({
-
-video:true
-
-})
-
-
-.then(stream=>{
-
-
-document.getElementById("camera").srcObject=stream;
-
-
-});
-
-
-}
-
-
-
-
-
-function backHome(){
-
-
-location.reload();
-
-
-}
-
-
-
-
-
-// จำลอง AI
-
-
-let result=[
-
-"สวัสดี",
-
-"ขอบคุณ",
-
-"รัก",
-
-"ช่วยเหลือ",
-
-"ยินดี"
-
-
-];
-
-
-setInterval(()=>{
-
-
-let x=result[Math.floor(Math.random()*result.length)];
-
-
-document.getElementById("word").innerHTML=x;
-
-
-
-},2500);
-
-
-
-</script>
-
-
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="logo">SIGN AI</div>
+    <span>AI Sign Language Translator</span>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-icon">🤟</div>
+      <h1>ระบบแปลภาษามือ<br>ด้วย AI</h1>
+      <p>เทคโนโลยี AI ที่ช่วยแปลท่าทางภาษามือเป็นข้อความแบบเรียลไทม์ เพื่อลดข้อจำกัดในการสื่อสาร</p>
+      <button onclick="openTranslator()">เริ่มใช้งาน</button>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="about">
+    <div class="about-container">
+      <h2>เกี่ยวกับโปรแกรม</h2>
+      <div class="about-text">
+        <p>ระบบนี้ถูกพัฒนาขึ้นเพื่อช่วยให้ผู้ใช้ภาษามือและบุคคลทั่วไปสามารถสื่อสารกันได้อย่างราบรื่นและมีประสิทธิภาพ</p>
+        <p style="margin-top: 20px;">โดยใช้เทคโนโลยี Artificial Intelligence ในการวิเคราะห์ท่าทางของมือและแปลเป็นข้อความได้อย่างแม่นยำและรวดเร็ว</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM SECTION -->
+  <section class="team">
+    <div class="team-container">
+      <h2>สมาชิกทีม</h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="member-avatar">👨‍💻</div>
+          <div class="member-name">สมาชิก 1</div>
+          <div class="member-role">ผู้พัฒนา AI</div>
+        </div>
+        <div class="team-member">
+          <div class="member-avatar">👨‍💼</div>
+          <div class="member-name">สมาชิก 2</div>
+          <div class="member-role">ผู้ออกแบบ</div>
+        </div>
+        <div class="team-member">
+          <div class="member-avatar">👩‍💻</div>
+          <div class="member-name">สมาชิก 3</div>
+          <div class="member-role">นักพัฒนาเว็บ</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRANSLATE SECTION -->
+  <section id="translate">
+    <div class="translate-header">
+      <h2>ระบบแปลภาษามือ</h2>
+    </div>
+
+    <div class="camera-container">
+      <div class="video-wrapper">
+        <video id="camera" autoplay playsinline></video>
+      </div>
+
+      <div class="result-panel">
+        <div id="word">รอการตรวจจับ...</div>
+        <div class="detection-status">
+          <div class="status-dot"></div>
+          <span>AI กำลังประมวลผลแบบ Real-time</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="button-secondary" onclick="backHome()">กลับ</button>
+    </div>
+  </section>
+
+  <script>
+    function openTranslator() {
+      // Hide home sections
+      document.querySelector(".hero").style.display = "none";
+      document.querySelector(".about").style.display = "none";
+      document.querySelector(".team").style.display = "none";
+
+      // Show translate section
+      document.getElementById("translate").style.display = "block";
+
+      // Request camera access
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: "user"
+        }
+      })
+        .then(stream => {
+          const video = document.getElementById("camera");
+          video.srcObject = stream;
+          startTranslation();
+        })
+        .catch(error => {
+          console.error("Error accessing camera:", error);
+          document.getElementById("word").innerHTML = "ไม่สามารถเข้าถึงกล้องได้";
+        });
+    }
+
+    function backHome() {
+      location.reload();
+    }
+
+    function startTranslation() {
+      // Simulated translation results
+      const translations = [
+        "สวัสดี",
+        "ขอบคุณ",
+        "รัก",
+        "ช่วยเหลือ",
+        "ยินดี",
+        "ใช่",
+        "ไม่",
+        "สวัสดีค่ะ"
+      ];
+
+      // Update translation every 2.5 seconds
+      setInterval(() => {
+        const randomWord = translations[Math.floor(Math.random() * translations.length)];
+        document.getElementById("word").innerHTML = randomWord;
+      }, 2500);
+    }
+  </script>
 
 </body>
 
